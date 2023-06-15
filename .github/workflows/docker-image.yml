@@ -16,7 +16,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t myapp:${{ github.sha }} .
-          docker tag myapp:${{ github.sha }} ghcr.io/${{ github.repository_owner }}/${{ github.repository_name }}:${{ github.sha }}
+          docker tag myapp:${{ github.sha }} ghcr.io/ifaniqbal/hello-world:${{ github.sha }}
 
   push:
     needs: build
