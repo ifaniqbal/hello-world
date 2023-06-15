@@ -13,9 +13,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build & Push Docker Image
         run: |
-          docker build -t myapp:${{ github.sha }} .
-          docker tag myapp:${{ github.sha }} ghcr.io/ifaniqbal/hello-world:${{ github.sha }}
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-          docker push ghcr.io/${{ github.repository_owner }}/hello-world:${{ github.sha }}
+          docker build -t ${{ github.repository }} .
+          docker tag ${{ github.repository }} ghcr.io/${{ github.repository }}
+          docker push ghcr.io/${{ github.repository }}
