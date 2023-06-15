@@ -13,23 +13,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Build Docker image
+      - name: Build & Push Docker Image
         run: |
           docker build -t myapp:${{ github.sha }} .
           docker tag myapp:${{ github.sha }} ghcr.io/ifaniqbal/hello-world:${{ github.sha }}
-
-  push:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Push Docker image to GitHub Container Registry
-        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
           docker push ghcr.io/${{ github.repository_owner }}/hello-world:${{ github.sha }}
